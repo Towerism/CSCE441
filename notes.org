@@ -1,1 +1,121 @@
-* CSCE 441-500
+* CSCE 441-500 
+Notes for Computer Graphics
+* Course info
+- Website [[http://faculty.cs.tamu.edu/jchai/csce441_2016spring]]
+- Lecture is more important than the textbook
+** Staff
+- Dr. Jinxian Chai HRBB 527D (MW 1:30-2:30pm) also by appointment
+- Grader: Chaitanya Visveswara (chaitu236@tamu.edu)
+- TAs Jianjie Zhang & Fuhao Shi HRBB 505 (jjzhang10@tamu.edu)
+- Send emails to both TA and Prof
+** Submissions
+- CSNet
+- Due midnight on day specified
+- Source and Win32 executable
+- Comment your unreadable code
+- No team coding
+** Grading
+- 60% Assignments
+- 15% Midterm
+- 25% Final
+** Applications
+*** Games
+*** Movies
+*** Visualization
+*** Industrial Design
+-* Virtual cars,
+-* Environments,
+-* Aircraft, etc
+*** Human computer interactions
+-* Microsoft's Kinect for Xbox 360 and Xbox One
+*** Realworld Modeling
+-* Google Earth
+-* Build a model, then render an image from a particular (perhaps different) viewpoint
+*** 3D Printing
+-* Design 3D object in virtual environment, then print it
+*** Visual Data Processing
+- Image and Video processing
+- Manipulating objects in a virtual space
+  - Compose images and models
+  - Synthesis the missing background
+  - Transform pictures
+** Expect to learn
+Using OpenGL in programming assignments
+*** 2D Graphics
+-* Drawing lines, polygons
+-* Image processing
+*** 3D Graphics
+- Transformations
+- Lighting
+- Ray Tracing (popular in global lighting techniques)
+- Geometric Modeling
+- Splines
+- Animation
+** Expected to know
+*** Programming Experience
+A*ssignments are in C/C++
+*** Simple Mathematics
+** How much math?
+*** General geometry/linear algebra
+*** Matrices
+-* Multiplication
+-* Inversion
+-* Determinant
+*** Vectors
+- Dot product,
+- Cross product, linear independence
+** Linear Algebra Test
+- See todo for deadline
+- [[http://projects.cs.tamu.edu/keyser/LAtest/]]
+- Need 90% correct by deadline, or will get a 0 for the class
+* Into to OpenGL
+** What?
+*** Computer graphics API
+- Developed by SGI in 1992
+- Efficient, streaming interface
+- 250+ function calls for drawing 2D and 3D graphics
+- Hardware independent
+- OS independent
+- Competes against direct3D from microsoft
+  - OpenGL seems to be more popular because it is OS independent
+** What it is not
+- No commands for windowing
+- No commands for obtaining user input
+- No commands for anything except drawing on the screen
+** Command Formats
+- Prefix (e.g. gl)
+- Initial capital letters
+- Number of components
+  - 2: (x, y)
+  - 3: (x, y, z)
+  - 4: (x, y, z, w)
+- Data type
+- Vector
+** Geogetric Primitives
+See documentation for better descriptions
+- GL_POINTS
+- GL_TRIANGLE_STRIP
+- GL_TRIANGLES
+  - Each triad of vertices defines a triangle
+- GL_LINES
+  - Each pair of vertices constitutes a line
+- GL_LINE_STRIP
+  - Connect each vertex to the previous one
+- GL_TRIANBLE_FAN
+- GL_LINE_LOOP
+  - Like STRIP except the first and last points are connected
+- GL_QUADS
+- GL_QUAD_STRIP
+- GL_POLYGON
+* Related Libraries
+** GLU (OpenGL Utility Library)
+- Part of OpenGL
+- Provides higher-level drawing routines such as
+  - Spheres,
+  - NURBS,
+  - Tesselators,
+  - Quadric shapes, etc.
+** GLUT (GLU Toolkit)
+- perform system level IO with host os
+- cross platform
+- protable window API
