@@ -119,3 +119,85 @@ See documentation for better descriptions
 - perform system level IO with host os
 - cross platform
 - protable window API
+* Scan Conversion of Lines
+** Line-drawing using "Paint"
+** How can we represent and display images
+*** Image representation
+**** An image is a 2D rectilinear array of pixels
+- width*height array where each entry of the array stores a single pixel
+- each pixel stores color information
+*** Displays
+  - LCD
+- Oculus
+- Smartphone
+**** Pixels
+- Smallest element of picture
+- Integer position (i, j)
+- Color information (r, g, b)
+***** Luminance pixels
+- Gray-scale images (intensity images)
+- 0-1.0 or 0-255
+- 8 bits per pixel (bpp)
+***** Red, green, pixels (RGB)
+- Color images
+- Each channel: 0-1.0 or 0-255
+- 24 bpp
+** Digital Scan Conversion
+- Convert graphics output primitives into a set of pixel values for storage in
+  the frame buffer
+- Store image info in the frame buffer
+- Display on screen based on what is stored in frame buffer
+** How to draw a line
+*** Problem
+- Given two points (P, Q) on the screen (with int coordinates) determine which
+  pixels should be drawn to display a unit width line
+**** Idea is to interpolate pixel values through rounding based on a perfect straight-through line (DDA)
+***** Special lines
+- Horizontal (y is constant)
+- Vertical (x is constant)
+- Diagonal (increment both)
+***** Arbitrary lines
+****** Slope-intercept equation for a line
+$y = mx + b$
+****** Focus on line with slope between 0 to 1
+- Manipulate line equation to satisfy this property
+*** Digital DIfferential Analyzer (DDA)
+- Sample unit intervals in one coordinate
+  - e.g. inc x by 1, inc y by m
+- Find nearest pixel for each sampled point
+**** Limitations
+- Floating point operations (slow)
+- Rounding (slow)
+- Can we do better?
+*** Midpoint algorithm
+- Next pixel to draw is always East or Northeast from the current pixel
+- Given a point, determinte whether the next pixel is E or NE
+- Is the line above or below the midpoint (x + 1, y + 1/2)
+  - Below: move E
+  - Above: move NE
+**** Implementation issues
+***** How to eval if the midpoint is above or below the line
+- properties
+  - $y=mx+b (x,y)$ on the line
+  - $y<mx+b (x,y)$ below the line
+  - $y>mx+b (x,y)$ above the line
+- Manipulate $f(x,y) = y-mx-b$ to achieve integers $c,d,e$
+  - $f(x,y)=cx+dy+e$
+  - if $f(x,y)<0$, then the point is below the line
+  - similarly for > and =
+***** How to incrementally eval this
+- Incremental update to speed up the algorithm
+- Fancy discrete math proofs and manipulations
+- Need value of $f(x + 1, y + 1/2)$ to determine E or NE
+- Build incremental algorithm
+- Assume we have a value of $f(x+1, y+1/2)$
+  - Find value of $f(x+2, y+1/2)$ if E is chosen
+  - Find value of $f(x+2, y+3/2)$ if NE is chosen
+***** How to avoid floating point ops
+- Just a bunch of plugging into f(x,y), expanding, and simplifying
+**** Advantages 
+- Only integer operations
+*** Midpoint Algorithm: Circle
+- Similar idea: but the possible directions seem to change
+** Required reqdings
+HB 6.1-6.8 (remember ppt more important) 
