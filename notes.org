@@ -200,4 +200,84 @@ $y = mx + b$
 *** Midpoint Algorithm: Circle
 - Similar idea: but the possible directions seem to change
 ** Required reqdings
-HB 6.1-6.8 (remember ppt more important) 
+HB 6.1-6.8 (remember ppt more important)
+* Scan Conversion of Polygons
+** Drawing General Polygons
+*** Drawing Rectangles
+**** How to avoid overlap?
+- *RULE* In this class do *not* draw pixels on the *top* and *right* of the
+  rectangle
+- Benefit: we never draw the same pixel twice
+- There are some limitations
+*** How to draw every interior pixel?
+- process the scan line from the bottom of the boundaries to the top
+**** draw every interior pixel for each scan line
+- including pixels intersecting the boundary
+- you only draw pixels at "odd" intervals
+  - The first interval is defined by the first and second intersection point
+  - Next interval is defined by the second and third intersection point etc.
+**** Once again follow the rule for avoiding overlapping polygons
+**** Overview
+***** Intersect scan lines with edges 
+- use *coherence* to speed up
+  - using the relationship between two intersecting scan lines and the polygon
+    edge
+***** Find ranges along x
+***** Fill interior of those ranges
+***** Draw odd intervals only
+*** How to store polygon edges?
+**** Sorted Edge Tables
+- Associate polygon edges with scan lines
+- Find out the low end point for each and correlate it with a corresponding
+  scanline
+- Store the multiple edges associated with each scanline as a linked list
+- Exclude horizontal edges
+*** Represent edges intersecting current scanline
+**** Active Edge List
+- List of all edges intersecting current scan-line sorted by their x-values
+- Each edge is stored with the following information
+| Edge     | Description                              |
+|----------+------------------------------------------|
+| maxY     | highest y-value                          |
+| currentX | x-value of end-point with lowest y-value |
+| xIncr    | 1 / slope                                |
+
+*** Algorithm
+#+BEGIN_SRC
+line = 0
+While (line < height)
+  Add edges to active edge list from sorted edge table starting at line
+    Table sfarting at line
+  Remove edges with a maxY equal to currentX
+  Fill interior pixels // draw pixels the curreent scan line
+  Increment x-values on edges in Active Edge list
+  Increment line
+#+END_SRC
+** Drawing Curved Objects
+Neither mid-term or final will test on this!
+*** How to draw every interior pixel?
+- process the scan line from the bottom to top
+- find the intersection positions between the current scan line and the
+  boundaries of fill region
+- use coherence properties to reduce the process
+- fill interior pixel in the odd intervals
+** Methods for drawing polygons or curved objects
+*** Scanline conversion of polygons
+*** Boundary fill (boundary is one color)
+- Start with drawn boundaries and an interior point
+- Recursively recolor outward from that point
+  - If neighbor is different, then recolor and recur
+- Everyting within the boundary is changed to that color
+*** flood fill (boundary may be different colors)
+- Start with a point
+- Define color under that point sas the interior color
+- Recursively recolor outward from that poing
+  - If neighbor is interior color, then recolor and recur
+- Contiguous regions are re-colored
+*** Boundary vs Flood-fill
+- Both start with an interior pixel
+- Boundary-fill requires annotating boundary pixels while flood-fill requires
+  annotating interior pixels
+- Both are appealing to fill in the irregular boundaries
+** Reading
+- 6-10 and 10-14
