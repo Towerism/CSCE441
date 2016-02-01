@@ -281,3 +281,89 @@ Neither mid-term or final will test on this!
 - Both are appealing to fill in the irregular boundaries
 ** Reading
 - 6-10 and 10-14
+* Clipping lines
+** Why Clip?
+- Do not want to waste time drawing objects that are outside of the viewing
+  window (or clipping window)
+** Clipping points
+- Given a point (x, y) and clipping window (xmin, ymin), (xmax, ymax)
+- Determine if the point should be drawn
+** Clipping lines
+- Given a line with end-points (x0, y0), (x1, y1) and clipping window (xmin,
+  ymin), (xmax, ymax)
+- Determine
+  - whether line should be drawn
+  - clipped end-points of line to draw
+** Simple Alg
+- If both end points inside rect, draw line
+- If one end-point outside,
+- Intersect line with all edges of rectangle
+  - clip the line segment outside the rect, and repeat test with rest of edges
+*** Intersecting two lines
+- parametric representation of the lines
+  - t = 0 corresponds to (x0,y0)
+  - t = 1 correspons to (x1, y1)
+- Have a system of parametric equations to determine if there is an
+  intersection and also to calculate the point of intersection
+*** Disadvantages
+- Lots of intersection tests makes alg expensive
+- Complicated tests to determine if intersecting rectangle
+- Is there a better way?
+**** Trivial accepts
+- big optimization
+- How can we quickly decide whether the line segment is entirely inside window
+- Answer: test both endpoints
+**** Trivial rejects
+- How to know if a line is outside of the window
+- Answer: both endpoints on wrong side of the same edge, can trivially reject
+  the line
+** Cohen-Sutherland
+*** Classify p0, p1 using region codes c0, c1
+- Every end point is assigned to a four-digit binary value, i.e. region code
+- Each bit position indicates whether the point is inside or outside of a
+  specific window edges
+| bit 4 | bit 3  | bit 2 | bit 1 |
+|-------+--------+-------+-------|
+| top   | bottom | right | left  |
+
+| 1001 | 1000 | 1010 |
+| 0001 | 0000 | 0010 |
+| 0101 | 0100 | 0110 |
+**** If c0 ^ c1 not 0
+- bitwise and 0010 ^ 1011 = 0010
+- trivially reject
+**** If c0 bitwise or c1 not 0
+- trivially accept because both points are not on wrong side for any edge
+- bitwise or 0010 op 1011 = 1011
+**** Otherwise reduce to trivial cases by splitting into two segments
+*** Window intersection
+- Similar to simple alg
+*** Extends easiy to 3D line clipping
+- 27 regions
+- 6 bits
+*** Summarize
+- Use region codes to quickly eliminate/incude lines
+  - *best algorithm when trivial accepts/rejects are common*
+- Must compute viewing window clipping of remaining lines
+- More efficient algs exist
+  - non-trivial clipping cost
+** Liang-Barsky
+*** Parametric definition of a line
+- x = x1 udeltax
+- y = y1 udeltay
+- deltax = (x2-x1)
+- deltay = (y2-y1), 0<=u<=1
+*** Lines are oriented: classify lines as moving inside to out or outside to in
+- For lines stating outside, update its starting point
+- For lines starting inside, update end point
+- For lines paralleling the boundaries and outside, reject it
+*** Goal find range of u for which x and y both inside the viewing window
+*** Advantages
+- Faster than cohen-sutherland
+- Extension to 3D is easy
+  - parametric rep for 3D lines
+  - Compute u1, u2 based on the intersection between ine and plane
+** More Complex clipping windows
+- The clipping could be any polygon
+- Both Cohen and Liang can be extended to any polygon as well curve clipping
+** Required reqdings: HB 8-5, 8-6, 8-7, and 8-9
