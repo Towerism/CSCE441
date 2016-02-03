@@ -367,3 +367,76 @@ Neither mid-term or final will test on this!
 - The clipping could be any polygon
 - Both Cohen and Liang can be extended to any polygon as well curve clipping
 ** Required reqdings: HB 8-5, 8-6, 8-7, and 8-9
+* Clipping polygons
+** Why is clippping hard?
+- Consider the result of clipping a triangle
+  - May be a triangle
+  - Or some other polygon such as a 7-gon (7 is the max for a triangle)
+- Tough cases such as concave polygons
+** Sutherland-Hodgman Clipping
+- *convex polygons*
+*** Idea
+- Apply line clipping to each edge of polygon
+- But we may get unconnected lines which is undesirable
+- *Basic idea* similar to line clipping
+  - Clip against each edge of the window
+  - This way the clipped polygon would be connected along the window edges
+*** Input/Output for algorithm
+- input: list of polygon vertices *in order*
+- output: list of clipped polygon vertices consisting of old vertices (maybe)
+  and new vertices (maybe)
+*** How to clip against window edge
+- Go around polygon one vertex (i.e. polygon edge) at a time
+- Current vertex has position E
+- Previous vertex had position S, and it has been added to the output if appropriate
+- *Need to determine output vertices for each polygon lines*
+**** Four cases
+- both inside S to E
+  - include E
+- outside to inside S to E
+  - include E plus intersection
+- inside to outside S to E
+  - include intersection
+- both outside S to E
+  - exclude both
+*** Dealing with non-convex polygons
+1. split concave polygon into two or more convex polygons (see sec 4-7)
+2. use more general polygon clipper
+3. perform the algorithm plus post-processing
+*** Dealing with more general clipping boundaries
+- Do polygon clipping against each boundary edge
+*** Summary
+- Works for convex input polygons
+- Works for convex clipping boundaries
+- Easy to pipeline for parallel processing
+- Polygon from one boundary does not have to be completed before next boundary starts
+** Weiler-Atherton 
+- *general polygons*
+*** Idea
+- trace around perimeter of the fill polygon
+- search for the borders that enclose a clipped fill region
+*** Procedure
+1. process the edges of the polygon fill area in a CCW order until an
+   inside-outside pair of vertices is encountered
+2. Follow the window boundaries in a CCW direction from the exit-intersection point to
+   another intersection point with the polygon
+   - *previously processed?*
+   - if yes: go to next step
+   - if no: continue processing polygon until a previously encountered point is
+     encountered
+3. Form the vertex list for this section of the clipped area
+4. Return to exit-intersection point and continue processing polygon edges in a
+   CCW order until another inside-outside pair of vertices is encountered
+*** Summary
+- Works for general input polygons (concave and convex)
+- Handles a clipping window with any polygon shape (concave and convex)
+- Can be extended to 3D
+- Not as efficient as Sutherland-Hodgman
+- Not as efficient as Sutherland-Hodgman
+- Not easy to parallelize
+** Nonlinear clipping-window boundaries
+- Approximate the boundaries with straight-line sections
+- Use the existing polygon clipping algorithms for clipping against a general
+  polygon-shaped clipping window
+** Required readings
+HB 8-8
