@@ -440,3 +440,119 @@ Neither mid-term or final will test on this!
   polygon-shaped clipping window
 ** Required readings
 HB 8-8
+* 2D Transformations
+** Point Representation
+- We can use a column vector (a 2x1 matrix) to represent a 2D point (x, y).
+- A general form of /linear/ transformation can be written as
+\[
+x' = ax + by + c
+\]
+or
+\[
+y' = dx + ey + f
+\]
+- Transformations can be written as a matrix, vector multiplication.
+** Translate
+- Re-position a point along a straight line
+- Given a point (x, y), and the translation distance (tx, ty).
+| x' |   | 1 | 0 | tx |   | x |
+| y' | = | 0 | 1 | ty | * | y |
+| 1  |   | 0 | 0 | 1  |   | 1 |
+- How to translate an object with multiple vertices?
+  - Translate each vertex individually
+** Rotate
+*** About the origin
+- Default rotation center: Origin (0, 0)
+- For theta
+  - >0: Rotate counter clockwise
+  - <0: Rotate clockwise
+- Rotate (x, y) /about the origin/ by theta
+  - Result: (x', y')
+- Use trig to calculate the angle to rotate (x, y) to get (x', y')
+- Matrix form
+| x' |   | cos theta | -sin theta | 0 |   | x |
+| y' | = | sin theta | cos theta  | 0 | * | y |
+| 1  |   | 0         | 0          | 1 |   | 1 |
+*** About any point 
+- Idea
+  - Translate the rotation center to the origin
+  - Perform the rotation
+  - Translate it back
+| x' |   | 1 | 0 | px |   | cos theta | -sin theta | 0 |   | 1 | 0 | -px |   | x |
+| y' | = | 0 | 1 | py | * | sin theta | cos theta  | 0 | * | 0 | 1 | -py | * | y |
+| 1  |   | 0 | 0 | 1  |   | 0         | 0          | 1 |   | 0 | 0 | 1   |   | 1 |
+** Scale
+- Alter the size of an object by a scaling factor (Sx, Sy)
+- Apply scaling to each vertex
+- For now, translation will also occur
+  - Consider scaling without translation
+| x' |   | Sx |  0 | 0 |   | x |
+| y' | = |  0 | Sy | 0 | * | y |
+| 1  |   |  0 |  0 | 1 |   | 1 |
+*** Without translation
+| x' |   | 1 | 0 | px |   | Sx |  0 | 0 |   | 1 | 0 | -px |   | x |
+| y' | = | 0 | 1 | py | * |  0 | Sy | 0 | * | 0 | 1 | -py | * | y |
+| 1  |   | 0 | 0 | 1  |   |  0 |  0 | 1 |   | 0 | 0 | 1   |   | 1 |
+** Shearing
+- in x
+| x' |   | 1 | h | 0 |   | x |
+| y' | = | 0 | 1 | 0 | * | y |
+| 1  |   | 0 | 0 | 1 |   | 1 |
+- in y
+| x' |   | 1 | 0 | 0 |   | x |
+| y' | = | g | 1 | 0 | * | y |
+| 1  |   | 0 | 0 | 1 |   | 1 |
+*** Interesting facts
+- A 2d rot is three shears
+- Shearing will not change the area of the object
+- Any 2d shearing can be done by a rotation, followed by a , follow by a .
+** Reflection
+- About X-axis
+| x' |   | 1 |  0 | 0 |   | x |
+| y' | = | 0 | -1 | 0 | * | y |
+| 1  |   | 0 |  0 | 1 |   | 1 |
+- About Y-axis
+| x' |   | -1 | 0 | 0 |   | x |
+| y' | = |  0 | 1 | 0 | * | y |
+| 1  |   |  0 | 0 | 1 |   | 1 |
+- About origin
+| x' |   | -1 |  0 | 0 |   | x |
+| y' | = |  0 | -1 | 0 | * | y |
+| 1  |   |  0 |  0 | 1 |   | 1 |
+*** About an arbitrary line
+Idea, rotate, reflect, rotate back (similar to above arbitrary methods)
+** Affine Transformation
+- Translation, scaling, rotation, shearing are all affine transformations
+- Affine transformation - transformed point is a linear combination of the
+  original points
+*** How to find affine transformations
+- How many points needed to estimate affine transformation?
+- Three because you have two equations for each correspondent
+- 6 unknowns
+** Composing transformation
+- Composing transformation - the process of applying several transformations in succession to
+  form done overall trans
+- The arbitrary methods above, can use pre-multiplication to get a composite
+  transformation matrix
+*** Order is important
+- Matrix multiplication is associative
+- Transformation products may not be commutative!
+- Example: rotation and translation are not commutative
+**** Some cases where it does not matter
+- translation
+- scaling
+- rotation
+** Why use 3x3 Matrices?
+- So that we can use matrix, vector multiplication for all transformations
+- This allows us to pre-multiply all the matrices together
+- The point (x, y) needs to be represented as (x,y,1)
+  - This is call *homogeneous coordinates*
+  - How to represent a vector (v_x, v_y)?
+    - (v_x, v_y, 0)
+  - Remember,
+    - for *point* the homogeneous coordinate is 1
+    - for *vector* it is 0
+** Applications
+*** Animation
+*** Image/object manipulation
+*** Viewing transformation
