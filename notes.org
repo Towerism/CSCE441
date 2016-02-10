@@ -525,10 +525,15 @@ Idea, rotate, reflect, rotate back (similar to above arbitrary methods)
 - Translation, scaling, rotation, shearing are all affine transformations
 - Affine transformation - transformed point is a linear combination of the
   original points
+- Essentially using basic transformations to obtain a composite matrix to
+  describe a complex transformation
 *** How to find affine transformations
 - How many points needed to estimate affine transformation?
 - Three because you have two equations for each correspondent
 - 6 unknowns
+| x' |   | m11 | m12 | m13 |   | x |
+| y' | = | m21 | m22 | m23 | * | y |
+| 1  |   | 0   | 0   | 1   |   | 1 |
 ** Composing transformation
 - Composing transformation - the process of applying several transformations in succession to
   form done overall trans
@@ -556,3 +561,49 @@ Idea, rotate, reflect, rotate back (similar to above arbitrary methods)
 *** Animation
 *** Image/object manipulation
 *** Viewing transformation
+* 3D Transformations
+- A 3D point (x,y,z) - x,y, and z coordinates
+- we will still use column vectors to represent points
+- Homogeneous coordinates of a 3D point (x,y,z,1)
+- Transformation will be performed using a 4x4 matrix
+** Right-handed Coordinate System
+$x*y=z$; $y*z=x$; $z*x=y$
+** Translation
+** Rotation
+- 3D rotation is done around a rotation *axis*
+- Fundamental rotations - rotate about x, y, or z axes
+- CCW rotation is referred to as positive rotation (when you look down negative axis)
+- Keep the axis of rotation constant
+  - Replacement
+  - I.e. treat the other two axes as if they are x and y axes in 2d rotation
+*** Arbitrary axis
+- Set up a transformation that superimposes rotation axis onto one coordinate axis
+- Rotate about the coordinate axis
+- Translate and rotate object back via inverse of the initial transformation
+- The resulting composite matrix is *orthonormal*
+  - column rows linearly independent *orthogonal*
+  - column rows are unit vectors *normalized*
+  - inverse of the matrix is its transpose
+** Scaling
+- Very similar to 2d transformation
+** Inverse of 3D transformations
+- Invert the transformation matrix
+* Coordinate transformation
+- Coordinate transformation from one reference frame to another
+** Review
+- Dot product: angle between two vectors
+- Cross product: area determined by two vectors
+** 2D Cartesian coordinate system
+- Axes described by unit vectors i and j.
+  - $i \cdot i = 1$
+  - $j \cdot j = 1$
+  - $i \cdot j = 0$
+- Any 2D vector can be represented as xi + yj
+- Any 2D vector starting from the origin can be described as $op = xi + yj$
+*** Transform object description
+- from $i'j'$ to $ij$
+- Use composite matrix which performs a possible rotation and a possible
+  translation
+** Object
+** World
+** View
