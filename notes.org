@@ -589,7 +589,6 @@ $x*y=z$; $y*z=x$; $z*x=y$
 ** Inverse of 3D transformations
 - Invert the transformation matrix
 * Coordinate transformation
-- Coordinate transformation from one reference frame to another
 ** Review
 - Dot product: angle between two vectors
 - Cross product: area determined by two vectors
@@ -631,3 +630,40 @@ $x*y=z$; $y*z=x$; $z*x=y$
 ** Composite 3D Transformation
 - Similarly, we can extend composition transformation from 2D to 3D
 - Once again a 4x4 transformation matrix
+* Hierarchical models
+** Symbols and Instances
+- Mose graphics API supports a few primitives:
+  - sphere
+  - cube
+  - cylinders
+- These symbols are instanced using instance/model transformation
+** Instance translation
+- created by modifying the model-view matrix
+#+BEGIN_SRC
+glMatrixMode(GL_MODELVIEW)
+glLoadIdentity(...)
+glTranslate(...)
+glRotate(...)
+glScale(...)
+house()
+#+END_SRC
+*** Opengl implementation
+- Opengl postmultiplies transformation matrices as they are called
+- Each subsequent transformation call concatenates the designated transformation
+  matrix on the right of the composite matrix
+We must invoke the transformation in the opposite order from which they are applied
+*** Consider a car model
+- 2 primitives: chassis + wheel
+- 5 instances: 1 chassis + 4 wheel
+- Represent the car as a tree to show relationship between the parts
+** Hierarchical Modeling
+- Hierarchical model can be composed of instances using trees or directed
+  acyclic graphs (DAGs)
+- Edges contains geometric transformations
+- Nodes contains geometry
+- Drawing is done most efficiently using a DFS
+** Articulated Models
+- You can draw these models as long as
+  - you know how to draw each primitive in local reference frames
+  - you know how to call transformation matrices to model the relationship
+    between the primitives
