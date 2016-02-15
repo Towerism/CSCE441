@@ -601,9 +601,33 @@ $x*y=z$; $y*z=x$; $z*x=y$
 - Any 2D vector can be represented as xi + yj
 - Any 2D vector starting from the origin can be described as $op = xi + yj$
 *** Transform object description
+
+
 - from $i'j'$ to $ij$
 - Use composite matrix which performs a possible rotation and a possible
-  translation
-** Object
-** World
-** View
+  translatio
+- Build a relation using three vectors
+  - from old to new origin
+  - from new origin to point
+  - from old origin to point
+- new point given by
+  - $[i' j' o']p$
+*** Alternative way to look at the system
+- transforming the old coordinate system to the new coordinate system
+- then take the inverse transformation coordinates to achieve the old
+  coordinates in the new coordinate system
+** 3D Coordinate Transformation
+- Once again use 4 by 4 transformation matrix to model the transformation
+** Composite 2D Transformation
+- Describe the model transformations in 2d objects
+- Multiple coordinate transformations to model animation of a character
+- *Forward kinematics function*, mapping of a local point of a character to a global
+  coordinate system
+*** Animate the character
+- *keyframe animation*
+  - manually pose the character by choosing appropriate position and angle parameters
+  - linearly interpolate in between poses
+  - works for any types of articulated characters
+** Composite 3D Transformation
+- Similarly, we can extend composition transformation from 2D to 3D
+- Once again a 4x4 transformation matrix
