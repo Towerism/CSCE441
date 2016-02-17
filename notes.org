@@ -667,3 +667,91 @@ We must invoke the transformation in the opposite order from which they are appl
   - you know how to draw each primitive in local reference frames
   - you know how to call transformation matrices to model the relationship
     between the primitives
+* 3-D Viewing
+** 3D Geometry Pipeline
+- Object space
+- World space
+- View space
+- Normalized projection space
+- Screen/Image space
+*** OpenGL Codes
+- Just as in hierarchical modeling
+- Apply transformations in reverse order
+- That is
+  - viewport transformation
+  - projection transformation
+  - viewing transformation
+** Rotate and translate camera to desired camera viewpoint
+*** Camera coordinate
+**** Canonical coordinate system
+- usually right handed (looking down z axis)
+- convenient for project and clipping
+**** Mapping from world to eye coordinates
+- eye position maps to origin
+- right vector maps to x axis
+- up vector maps to y axis
+- back vector maps to z axis
+- Then you use this mapping to use 3D coordinate translation to find the mapping
+  from world to eye coordinates
+*** Viewing transformation
+- We have the camera in world coordinates
+- We want to model translation T which takes object from world to camera
+- Trick: find inverse of T taking object from camera to world
+**** gluLookAt
+- Need to know a few things
+- Camera center (eye)
+- Point on an object (of interest) to look at
+- Up vector for the camera coordinate system system
+***** How to properly configure up, right, and back vectors
+- make sure that the right vector will be perpendicular to the up vector
+- accomplish this by taking the cross product of the vector from eye origin to
+  the point to look at and the up vector.
+*** Projection
+- General definition
+  - transform points in n-space to m-space (m<n)
+- In computer graphics
+  - map 3D coordinates to 2D screen coordinates
+**** Map 3D coordinates to 2D coordinates
+***** Perspective projection
+- maps points onto "view plane" along projectors emanating from "center of
+- consider the projection of a 3D point on the camera plane
+  - using similar triangles
+  - we can compute the scale for the x and y coordinates
+- transformation
+  - $(x,y,z) \left arrow (-dx/z, -dy/z)$
+  - remember to use homogeneous coordinates in order to turn this transformation
+    into a linear transformation
+***** Perspective effects
+- Distant object object becomes small
+- The distortion of items when viewed at an angle (spatial foreshortening)
+***** Properties of Perspective Projection
+****** Perspective projection is an example of projective transformation
+- lines maps to lines
+- parallel lines do not necessarily remain parallel
+  - *vanishing points* each set of parallel points not parallel to the
+    projection plane will vanish at their intersection point in the projection
+- ratios are not preserved
+******* Advantage: size varies inversely proportionally to distance to look more realistic
+***** Parallel Projection
+- Center of projection is at infinity
+****** Orthographic projection
+- Special case of parallel projection
+- Direction of projection (DOP) perpendicular to view plane
+- Depth values are all mapped to 0
+****** Properties
+- Not realistic looking
+- Good for exact measure
+- Are actually affine trasformation
+  - parallel lines remain parallel
+  - ratios are preserved
+  - angles are often not preserved
+- Often used in CAD programs
+**** Perspective Projection Volume
+- The center of the projection and the portion of projection plane that map to
+  the final image form an infinite pyramid. The sides of pyramid called clipping
+  planes
+- Additional clipping planes are inserted to restrict the range of depths
+  - Far clip plane
+  - Near clip plane
+  - Both planes will define a viewing pyramid
+    - Objects not inside the pyramid will be clipped
