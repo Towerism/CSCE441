@@ -755,3 +755,11 @@ We must invoke the transformation in the opposite order from which they are appl
   - Near clip plane
   - Both planes will define a viewing pyramid
     - Objects not inside the pyramid will be clipped
+* Culture 1
+** Speaker Info
+- Name:
+- Affiliation
+- Date:
+- Presentation:
+** Motivation
+** New Contribution
