@@ -753,5 +753,63 @@ We must invoke the transformation in the opposite order from which they are appl
 - Additional clipping planes are inserted to restrict the range of depths
   - Far clip plane
   - Near clip plane
-  - Both planes will define a viewing pyramid
+  - Both planes will define a viewing (truncated) pyramid
     - Objects not inside the pyramid will be clipped
+- The truncated pyramid maps to a cube in the normalized projection space (left-handed)
+- The view space (right-handed)
+***** OpenGL
+- Truncated pyramid has 6 sides, defined using ~glFrustum~ function which takes
+  6 parameters
+  - First four parameters define the polygon dimensions for the near clipping plane
+  - The second two parameters define the distances of both clipping planes from
+    the eye
+- ~gluPerspective~ is the other function you can use
+  - Essentially calls glFrustum creating a symmetric truncated pyramid
+- Obtain normalized depth values between -1 and 1
+*** Viewport transformation
+- In OpenGL, use ~glViewport~ function
+  - specify a rectangle on screen for the viewport
+  - depth values are transformed to be between 0 and 1
+* Hidden Surface Removal
+** Rendering Pipeline
+- Modeling transformation
+- Lighting
+- Viewing transformation
+- Project transformation
+- Clipping
+- Scan conversion
+- Image
+** Hidden Surface Removal
+*** Hidden Surfaces
+- Motivation: determine which pixels are visible or not visible from a certain viewpoint
+**** Polygon mesh representation
+- Vertex and face list
+  - vertex list maps faces that contain the vertex
+  - face list maps vertices that form a face to that face
+*** Algorithms
+**** Backface Culling
+- *idea* cull triangles which are not facing the camera
+***** Advantages
+- Speeds up rendering by removing roughly half of polygons from scan conversion
+***** Disadvantages
+- Assumes closed surface with consistently oriented polygons
+- Not a true hidden surface algorithm
+**** Painter's Algorithm
+- *Idea* similar to oil painting
+  - draw background first
+  - then most distant object
+  - then nearer object
+  - and so forth
+- Sort polygons according to distance from viewer
+- Draw from back (farthest) to front (nearest)
+  - the entire object
+- Near objects will overwrite farther ones
+- Problem: objects can have a /range/ of depth, not just a single value
+- Need to make sure they don't overlap for this algorithm to work
+  - Might need to split up some polygons
+***** Advantages
+- Simple algorithm for ordering polygons
+***** Disadvantages
+- Splitting is not an easy task
+- Sorting can also be expensive
+- Redraws same pixel many times
