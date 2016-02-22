@@ -813,3 +813,95 @@ We must invoke the transformation in the opposite order from which they are appl
 - Splitting is not an easy task
 - Sorting can also be expensive
 - Redraws same pixel many times
+**** Binary Space Partitioning Trees
+- Basic principle: Objects in the half space opposite of the viewpoint do not
+  obscure objects in the half space containing the viewpoint; thus, one can
+  safely render them without covering foreground objects
+***** BSP Tree
+- Organize all of space (hence partition) into a binary tree
+- /pre-process/ overlay a binary tree on objects in the scene
+- /run-time/ correctly traversing this tree enumerates objects from back to front
+  similarly to painters' algorithm
+- *Idea* divide space recursively into half spaces by choosing splitting planes
+  - splitting planes can be arbitrarily oriented
+****** Details
+- positive half-space objects are place in the left branch
+- push down objects into the appropriate child branch as you go down until every
+  leaf has only 1 object
+- objects which are split by a half-space-line can be split into two objects
+****** Summary
+- Split along plane containing any polygon
+- classify all polygons into positive or negative half-space of the plane
+  - if a polygon intersects a plane, split it into two
+- recurse down positive half-space
+- recurse down negative half-space
+***** Building a BSP tree for polygons
+- Choose a splitting polygon
+- Sort all other polygons as
+  - front
+  - behind
+  - crossing
+  - on
+- Add "front" polygons to front child, "behind" to back child
+- Split "crossing" polygons with infinite plane
+- Add "on" polygons to root/current node
+- Recur
+****** Drawing:
+- Basically in-order traversal
+- But it depends on camera view point
+- If eye is in front of plane
+  - Draw "back" polygons
+  - Draw "on" polygons
+  - Draw "front" polygons
+- If eye is behind plane
+  - Draw "front" polygons
+  - Draw "on" polygons
+  - Draw "back" polygons
+- If eye is on plane
+  - Draw "front" polygons
+  - Draw "back" polygons
+***** Speed improvement
+- Take advantage of view direction to cull away polygons behind viewer
+***** Summary
+****** Pros
+- Simple, elegant scheme
+- no depth comparisons needed
+- polygons split and ordered automatically
+- works for moving cameras
+- only writes to frame buffer (similar to painters algorithm)
+****** Cons
+- Computationally intense pre-process state restricts algorithm to static scenes
+- Worst-case time to construct tree: O(n^3)
+- Splitting increases polygon count
+  - Again O(n^3) worst case
+- Redraws same pixel many times
+- Choosing splitting plane not an exact science
+- Not suitable for moving objects
+**** Z-Buffer
+***** Main idea
+- Simple modification to scan-conversion
+- Maintain a separate buffer storing the closest "z" value for each pixel: depth buffer
+- only draw pixel if depth value is closer than stored "z" value
+  - Update buffer with closest depth value
+  - work in normalized coordinate space [0.0...1.0]
+***** Algorithm
+- Initialize the depth buffer and frame buffer for every pixel
+- Process each polygon in a scene, one at a time
+***** Calculate "z"
+- Easy to implement for polygon surfaces using plane equation
+- How can we speed up the calculation?
+  - use incremental update during scan-line conversion
+  - update "z" values using scan line conversion algorithm
+***** Pros
+- Always works. nearest object always determines the color of a pixel
+- polygon drawn in any order
+- commonly in hardware
+***** Cons
+- Needs a whole extra buffer (depth buffer)
+- Requires extra storage space
+- Still overdraw
+***** Opengl
+- In opengl, depth values are normalized to [0.0, .1.0]
+- Specify initial depth-buffer value
+- Activate depth-testing operations
+**** Ray casting
