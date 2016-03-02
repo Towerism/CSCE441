@@ -505,7 +505,7 @@ y' = dx + ey + f
 *** Interesting facts
 - A 2d rot is three shears
 - Shearing will not change the area of the object
-- Any 2d shearing can be done by a rotation, followed by a , follow by a .
+- Any 2d shearing can be done by a rotation, followed by a scaling, follow by a rotation.
 ** Reflection
 - About X-axis
 | x' |   | 1 |  0 | 0 |   | x |
