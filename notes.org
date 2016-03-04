@@ -1062,3 +1062,45 @@ Incandescent
 *** HSV Color Model
 - Perceptually appropriate
 - Nonlinear transform between the HSV and RGB space
+* Image Filtering
+- *filter* Process that removes from a signal some unwanted component or feature
+- filtering is altering the *range* of image
+- warping is altering the *domain* of image
+- filtering in spatial domain involves applying a filter function to the input
+  image
+- *Common themes*
+  - Interwindow iteration
+  - Keeping pixel weights normalized so they sum to 1
+** Gaussian Filtering
+- the filter function is a discrete approximation to Gaussian function (with
+  sigma equal to 1.0)
+- filter applied by modifying surrounding pixels
+*** Features
+- blurs image
+- preserves details only for small sigma
+** Median Filtering
+- for each neighbor in image sliding the window
+- sort pixel values
+- set the center pixel to the median
+- increasing the size of the window increases blurriness
+- straight edges kept
+- sharp features lost
+*** Features
+- can remove outliers
+- Window size controls size of structure
+- Preserve some details but sharp corners and edges might be lost
+- Blurs image
+- Removes simple noise
+- No details preserved
+** Bilateral Filtering
+- Affecting or undertaken by two sides equally
+- *Property*
+  - Convolution filter
+  - Smooth image but preserve edges
+  - Operates in the domain and range of image
+- *Procedure*
+  - Apply a Gaussian filter on pixel weights based on value difference
+  - Smooth pixel values
+*** Comments
+- Can work with any reasonable distances function
+- Easily extended to higher dimension signals, e.g. images, video, mesh, etc.
