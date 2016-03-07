@@ -1104,3 +1104,71 @@ Incandescent
 *** Comments
 - Can work with any reasonable distances function
 - Easily extended to higher dimension signals, e.g. images, video, mesh, etc.
+* Image Warping
+- filtering is altering the *range* of image
+- warping is altering the *domain* of image
+- Can be useful for many things
+  - texture mapping (apply a texture to various 3d surfaces)
+  - image processing (rotation, zoom in/out etc)
+  - etc
+- *Transformation function* used to transform geometry of an image to desired geometry
+  - Used to compute corresponding points
+- *Control points* Unique points in the reference and target images. The
+  coordinates of corresponding control points in images are used to determine a
+  transformation function.
+** Image warps
+- Translation
+- Rotation
+- Aspect
+- Affine
+- Perspective
+- Cylindrical
+** Warping Types
+They can be applied globally over a subdivision of the plane
+- Piecewise affine over triangulation
+- Piecewise projective over a quadrilaterization
+- Piecewise bilinear over a rectangular grid
+Or other, arbitrary functions can be used, e.g.
+- Bieer-neely warp (popular for morphs)
+- Store u(x, y) and v(x,y) in large arrays
+*** Similarity
+- Combination of 2-D scale, rotation, and translation transformations
+- Allows a square to be transformed into any rotated rectangle
+- Angle between lines is preserved
+- 5 degrees of freedom
+- Inverse is of same form, given by inverse of transformation matrix
+*** Affine mapping
+- Combination of 2-D scale, rotation, shear, and translation transformations
+- Allows a square to be distorted into any parallelogram
+- 6 degrees of freedom
+- Inverse is of same form (is also affine). Given by inverse of transformation
+  matrix
+- Good when controlling a warp with triangles, since 3 points in 2D determined
+  the 6 degrees of freedom
+*** Projective map
+- Linear numerator and denominator
+- If g=h=0, then you get affine as a special case
+- Allow a square to be distorted into any quadrilateral
+- 8 degrees of freedom (the first two columns of the third row of the
+  transformation matrix)
+- Inverse is of same form
+- Good when controlling a warp with quadrilaterals, since 4 points in 2D
+  determine the 8 degrees of freedom
+** Mapping
+- Inverse mapping is better than forward mapping
+  - Forward mapping requires that you splat pixels to neighboring pixels
+  - Whereas with inverse mapping you simply linearly interpolate.
+- Requires a re-sampling filter
+- Typically you perform inverse warping followed by a re-sample
+** Re-sampling
+- HQ resampling requires careful use of low pass filters of variable support
+- Good resampling for scale factors near 1 (not scaling up or down much) can
+  be done with bilinear interpolation
+- Calculated by computing weighted sum of pixel neighborhood
+*** Point sampling
+- Nearest neighbor
+- Copy the color of the closest integer coordinate
+- Fast and efficient if the target size is similar to the reference
+- Otherwise, the result is chunky, aliased, or blurred
+*** Bilinear Filter
+- Weighted sum of four neighboring pixels
