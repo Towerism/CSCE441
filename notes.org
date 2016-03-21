@@ -1172,3 +1172,122 @@ Or other, arbitrary functions can be used, e.g.
 - Otherwise, the result is chunky, aliased, or blurred
 *** Bilinear Filter
 - Weighted sum of four neighboring pixels
+* Lighting
+** In the rendering pipeline
+- Occurs after Modeling transformation
+- Before Viewing transformation
+** Illumination
+- Color is a function of how light reflects from surfaces to the eye
+*** Global illumination 
+- accounts for light from all sources as it is transmitted
+- Light is emitted from a light source and reflected off of many surfaces onto
+  other surfaces
+*** Local illumination 
+- only accounts for light that directly hits a surface and is transmitted to the
+  eye
+- does not consider light that would be reflected off of other surfaces
+*** Light Sources
+- Any object emitting radiant energy is a light source that contributes to the
+  lighting effects for other objects in a scene
+- *Point light sources* defined by its position and the color of the emitted
+  light (RGB)
+- *Infinitely distant light sources* basically a point light source very far from
+  a scene. Defined by its direction and the color of the light (RGB)
+*** Reflection Models
+- *Reflection* the process by which light incident on a surface interacts with
+  the surface such that it leaves on the incident side without change in
+  frequency
+- In general you can represent reflection properties by a reflection surface
+  model
+  - diffuse, or
+  - specular
+**** Ideal Specular
+- Reflection Law
+- Mirror
+**** Ideal Diffuse
+- Lambert's Law
+- Matte
+**** Specular
+- Glossy
+- Directional diffuse
+- "In between ideal specular and diffuse"
+*** Materials
+- Plastic
+- Metal
+- Matte
+** Illumination Model
+*** Ambient light
+$I = k_aA$
+- Need to know intensity of ambient light, and
+- Ambient reflection coefficient
+- There are three equations (one for each of RGB)
+- Reflected light for every pixel is the same, and is scaled by the ambient term
+*** Diffuse light
+- Assumes that light is reflected equally in all directions
+- Handles both local and infinite light sources
+  - Infinite distance: Incident light angle does not change (with respect to
+    normal)_
+  - Finite distance: must calculate the angle for each point on surface
+- Need to know intensity of source,
+- diffuse reflection coefficient,
+- and angle between normal and direction to light
+- Three equations once again that you combine for the overall
+**** Lambert's law
+- Intensity received is equal to the intensity of the source times the dot
+  product of the incident light and the normal.
+- Thus beam width divided by surface area is cosine theta
+- For reflected light, simply scale by the reflection coefficient
+$I = Ck_dcos(\theta) = Ck_d(L \cdot N)$
+**** Total illumination
+$I = k_aA+k_dC(L \cdot N)$
+*** Specular Light
+- Perfect, mirror-like reflection of light from surface
+- Forms highlights on shiny objects
+- Reflected light is mirror to incident light across the normal.
+- Also takes into account the direction of the camera
+- $I=Ck_scos^n(\alpha)=Ck_s(R \cdot E)^n$
+  - $C$ = intensity of point light source
+  - $k_s$ = specular reflection coefficient
+  - $\alpha$ = angle between reflected vector ($R$) and eye ($E$)
+  - $n$ = specular coefficient
+**** Finding the Reflected Vector
+$L_{parallel} = N\cos(\theta)=N(L \cdot N)$
+$L_{perpendicular}=L-L_{parallel}$
+$R=L_{parallel}-L_{perpendicular}=2L_parallel - L$
+**** Total Illumination
+$I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
+*** Multiple Light Sources
+- Sigma together incoming light intensities
+** Light attenuation and spot light
+*** Attenuation
+- Decrease intensity with distance from light
+- $d$ = distance to light
+- $r$ = radius of attenuation for light
+- for example $att(d,r)=e^{{-d^2}/r^2}$
+**** For multiple light sources
+- Scale the intensity of incoming light by the attenuation function for each
+  corresponding light source
+*** Spot lights
+- Eliminate light contribution outside of a cone
+- How to create spot lights?
+  - If point is outside of the cone, the intensity is zero!
+  - For a point inside the cone, it depends on the angle of the incident light
+    to the central access
+**** For multiple light sources
+- Scale the intensity of incoming light by the spotlight coefficient for each
+  corresponding light source
+** Implementation Considerations
+- $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
+  - If $\theta >90$, no contributions
+- Typically choose $k_a+k_d+k_s \leq 1$
+- Clamp each color component to $[0,1]$
+** Opengl functions
+- See section 17-11
+- How to set up light sources
+  - light source pos
+  - type
+  - source colors
+  - radial-intensity attenuation
+  - spotlights
+- How to specify global lighting parameters
+- How to specify surface properties
