@@ -1291,3 +1291,58 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
   - spotlights
 - How to specify global lighting parameters
 - How to specify surface properties
+* Shading
+** Problem
+- Need to render each polygon efficiently
+- *Simple solution* calculate illumination once per polygon.
+  - Use this to approximate entire polygon
+- *Less simple solution* calculate illumination for each vertex.
+  - Use them to interpolate for entire polygon
+- *Complex solution* interpolate normal and depth values for every interior pixel
+  and use them to calculate the entire illumination
+** Vertex Normals
+- How to compute vertex normal given the normal of each polygon?
+  - First, compute normal for each polygon
+  - Next, average the normals
+** Interpolation
+*** Over Polygons
+- Given values at vertices of polygon, how do we interpolate data over interior?
+  - values could be either vertex normal or color, or even depth
+  - any vertex can be represented as a linear combination of polygon vertices
+  - we can interpolate values with the same weights (barycentric coordinates)
+- Per-vertex shading: RGB color interpolation
+- Per-Pixel shading: Normal interpolation
+*** Intensity interpolation (Gouraud Shading)
+- Polygon rendering can be combined with scan conversion
+- Two stage interpolation:
+  - First interpolate border pixels,
+  - Then interpolate interior pixels from border pixels
+- *Made more efficient with incremental calculation*
+  - Add currentF and fIncr to the edge data struct
+    - where currentF is the current feature value
+    - and fIncr is how much to increment the feature value in the next scan-line
+*** Interpolating Normals (Phong Shading)
+- Exactly the same as colors
+- Must re-normalize
+- Does not produce even spacing
+  - slerp
+** Texture Mapping
+- Geometry and lighting alone do not provide sufficient visual details
+- "Paste" 2D image onto 3D surface
+- Surface appears much more complex than reality
+** Techniques
+*** Flat Shading
+- Result not desirable: not smooth
+*** Gouraud (Per-Vertex) Shading
+- Assume normals at vertices of polygon
+  - If all normals the same, then the result is the same as flat shading
+  - Determine colors at each vertex
+- Use colors at vertex and interpolate for the interior of the polygon
+*** Phong (Per-Pixel) Shading
+- Assume normals at vertices of polygon
+- Interpolate normals from vertices across polygon
+- Determine color at each pixel in polygon
+- Captures highlights better
+- *Best result, but most expensive*
+  - Recommended, especially today when GPU acceleration has gotten more
+    sophisticated
