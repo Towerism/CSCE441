@@ -1346,3 +1346,58 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
 - *Best result, but most expensive*
   - Recommended, especially today when GPU acceleration has gotten more
     sophisticated
+* Texture Mapping
+- Geometry and lighting alone do not provide sufficient visual details
+- "Paste" 2D image onto 3D surface
+- Surface appears much more complex than reality
+- Add visual details to surfaces of objects
+- When scan-converting a polygon, vary pixel colors according to values fetched
+  from a texture
+- It is a 3D projective projection
+  - texture coordinate system to
+  - image coordinate system
+- Assume texture parameterized by u,v and also normalized
+- During polygon drawing, lookup color from texture using interpolated texture
+  coordinates
+** Sampling Textures
+- Nearest Neighbor
+  - Simplest method
+  - Very blocky, undesirable results
+- Linear blending
+  - Smooth appearance
+- There exists more complex techniques
+** Interior Points
+- Interpolate the u,v coordinates of the vertices
+** Combine Texture with Shading
+- Multiply the mapped texture image with the illumination map
+** Mip Maps
+- Set of down-sampled textures
+- Pick one based on size of sampling region
+- Speed up rendering process
+** Other uses of texture Mapping
+- In general, any attribute can placed into a texture
+*** Bump/Normal Mapping
+- Simulate the effects of details in geometry without adding geometry
+**** Different from Texture Mapping
+- Texture mapping cannot simulate rough surface details
+- Rough surfaces show illumination changes with the movement of the light or the
+  object
+  - Texture objects cannot simulate that
+  - Since independent of illumination parameters
+- Basic idea: perturb the normal and use the perturbed normal for illumination
+  computation
+- Make shading look more complicated than geometry really is
+- Represent the perturbations of normals in the same way as texture image
+*** Displacement Mapping
+- Offset geometry in direction of normal
+- Encode offset (height info) inside texture
+- Used to actually change the geometry and provide more detail (especially
+  silhouette)
+- Usually needs a lot of vertices to create realistic surface details
+**** Hardware Displacement Mapping (HDM)
+- Can be hardware accelerated
+- Often combines with *Tessellation* process
+- *Tessellation* is a method of breaking down polygons into smaller pieces.
+- *Displacement mapping* and *tessellation* is used to create 3D graphics for
+  almost all the games in PlayStation 4
+*** Environment Mapping
