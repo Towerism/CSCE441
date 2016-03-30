@@ -1401,3 +1401,100 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
 - *Displacement mapping* and *tessellation* is used to create 3D graphics for
   almost all the games in PlayStation 4
 *** Environment Mapping
+* Ray Tracing
+- *Ray Tracing* A global illumination technique
+- Because we only consider one ray per light source, it is just an approximation
+** Essential Information
+- Eye point
+- Screen position/orientation
+- Objects
+  - Material properties
+  - Reflection/Refraction coefficients
+  - Index of refraction
+- Light sources
+** Types of Rays
+*** Illumination/Shadow
+- Direct lighting from light sources
+**** Procedure
+- A ray is cast from an object's surface towards a light
+- If the light is not occluded then the light contributes to the object's
+  surface color
+- Otherwise, the light does not contribute to the object's surface color
+- If ray hits a semi-transparent object scale the contribution of that light and
+  continue to look from intersections
+*** Reflective
+- Light reflected by an object
+- Single ray chosen is symmetric to the eye vector across the surface normal
+**** Procedure
+- A ray is cast from the surface of an object based on its material properties
+- The contribution results in the specular reflection
+*** Refraction/Transparent
+- Light passing through an object
+- Single ray chosen by Snell's law
+**** Procedure
+- Some objects are transparent or translucent
+- The transmitted light also contributes to the surface color, called specular
+  transmission
+- The ray can be refracted based on the object's composition
+** Recursive Ray Tracing
+- $I=I_{direct} + \gamma_eI_{reflected} + \gamma_aI_{refracted}$
+  - $I_{direct} = I_{ambient} + I_{diffuse} + I_{specular}$
+  - $reflected$ and $refracted$ terms are calculated recursively
+*** Procedure
+- For each pixel
+  - Intersect ray from eye through pixel with all objects in scene
+  - Find closest (positive) intersection to eye
+  - Compute lighting at intersection point
+  - Recur for reflected and refracted rays (if necessary)
+*** Termination Criterion
+1) The ray intersects no surfaces
+2) The ray intersects a light source that is not a reflecting surface
+3) The tree has been generated to its maximum allowable depth
+   1) I.e. the next iteration would not change the result significantly
+** Three Issues
+*** Ray-object intersection
+**** Ray casting
+- Parameterize each ray as $r(t) = c+t(p_{ij}-c)$
+- Each object $O_k$ returns $t_k>0$ such that first intersection with $o_k$
+  occurs at $r(t_k)$
+- Question: given the set ${t_k}$, what is the first intersection point?
+**** Ray-triangle intersection
+- Intersect ray with plane
+- Check if point is in triangle
+*** Reflection direction
+- Mirror-like/Shiny Objects
+- $R=2(V \cdot N)N - V$
+*** Refraction direction
+- Bending of light cased by different speeds of light in different medium
+- Each (semi-)transparent object has an index of refraction $n_i$
+- Use Snell's law to find refracted vector
+**** Snell's law
+- $\dfrac{\sin(\theta_1)}{\sin(\theta_2)}=\dfrac{c_1}{c_2} = \dfrac{n_2}{n_1}$
+- Given V and N, as well as $n_1$ and $n_2$, how to calculate R?
+  - $R=\cos(\theta_2)(-N)+\sin(\theta_2)\dfrac{-V_{perp}}{|V_{perp}|}$
+** Surface Intersection
+*** Infinite planes
+*** Spheres
+*** Polygons
+** Optimizations
+*** Bounding Box
+- Lots of rays to cast!
+- Ray-surface intersections are expensive
+- Associate with each object
+  - Bounding box in 3d-space
+- If ray doesn't intersect box, then ray doesn't intersect object
+*** Parallel Processing
+- Ray tracing is a trivially parallel algorithm
+  - Cast rays in parallel
+  - Cast reflection, refraction, shadow rays in parallel
+  - Calculate ray intersection in parallel independently
+** Pros and Cons
+*** Advantages
+- All the advantages of the local illumination model
+- Also handles shadows, reflection, and refraction
+*** Disadvantages
+- Computationally expensive
+- No diffuse inter-reflection between surfaces (i.e. color bleeding)
+- Not physically accurate
+- *Other techniques exist to handle these shortcomings, at even greater
+  expense!*
