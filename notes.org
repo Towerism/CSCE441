@@ -1536,3 +1536,125 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
 ** Limitations
 - Assume distant environment
 - Only works for convex objects (i.e. no self inter-reflections)
+* Radiosity
+- Handles the shortcomings of ray-tracing /only/ for diffuse surfaces
+- *Radiosity* The /radiant (luminous) exitance/ is the radiant flux/power per
+  unit area leaving a surface
+- Model light effects by considering the physical lays governing the radiant
+  energy transfer
+- The radiosity model computes radiant-energy interactions between all the
+  surfaces in a scene
+** Key Idea #1
+- Radiance independent of direction
+- Surface looks the same from any viewpoint
+- No specular reflections
+*** Diffuse surface
+- Diffuse emitter
+  - Transform x to some constant over the angle
+- Diffuse reflector
+  - Reflectivity constant
+** Key Idea #2
+- Radiosity solution is an approximation, due to discretization of scene into patches
+- Subdivide scene into small polygons
+*** Constant Surface Approximation
+- Radiance is constant over a surface
+  - Transform x to a constant over x
+- surface element is given by its index
+** Equation
+- Emitted radiosity = self-emitted radiosity + received and reflected radiosity
+- $Radiosity_i = Radiosity_{self,i} + \sum_{j=1}^{N}a_{j \rightarrow i}Radiosity_i$
+- Radiosity equation for each of the $N$ polygons i
+- $N$ equations; $N$ unknown variables
+** Algorithm
+- *Subdivide the scene into small polygons*
+  - Mesh that determines final solution
+- *Compute for each polygon a constant illumination (radiosity) value*
+  - Transfer of energy between polygons
+- *Solve linear system*
+  - Results in power (color) per polygon
+- *Choose a viewpoint, and display the visible polygons*
+  - loop
+** Energy conservation equation
+- $\phi_i = \phi_{e,i} + \rho_i \sum_{j=1}^N \phi_jF(j \rightarrow i)$
+** Compute Form Factors
+- The form factor specifies the fraction of the energy leaving one patch and
+  arriving at the other. 
+- In other words, it is an expression of radiant exchange
+  between two surface patches
+*** Reciprocity
+- $F(i \rightarrow j)A_i=F(j \rightarrow i)A_j$
+- For each polygon
+*** Form Factors for infinitesimal surfaces
+- $F_{j \rightarrow i}$ = the fraction of power emitted by $j$, which is received
+  by $i$
+- _Area_
+  - if $i$ is smaller, it receives less power
+- _Orientation_
+  - if $i$ faces j, it receives more power
+- _Distance_
+  - if $i$ is further away, it receives less power
+- _Visibility_
+  - if not visible, it receives zero power
+- $F(j \rightarrow i)=\dfrac{\cos\theta_x\cos\theta_y}{\pi r^2_{xy}}dA_iV(x,y)$
+- Double integrate to solve
+**** How to compute?
+- Closed form
+  - Analytical
+- Hemicube
+*** Nusselt Analog
+- Nusselt developed a geometric analog which allows the simple and accurate
+  calculation of the form between 
+  - a surface and
+  - a point on a second surface
+- The form factor is, then, the area projected on the based of the hemisphere
+  divided by the area of the base of the hemisphere, or (A/B)
+**** Hemicube
+- Project the patch on hemicube
+- Add hemicube cells to compute form factor
+- This means we need to calculate the form factor for each cell in order to
+  pre-compute using delta form factors
+***** Observations
+- Depth information per pixel evaluates visibility
+  - very expensive
+- FFs for all polygons in scene
+  - Usually computed when needed
+  - Computationally expensive
+  - Memory complexity is quadratic
+- Hardware rendering (Z-buffer)
+- Severe aliasing: Small polygons "disappear"
+** Solve Linear System
+*** Matrix Conversion
+*** Iterative approaches
+**** Jacobian (gathering)
+- Start with initial guess for energy distribution (light sources)
+- Update radiosity/power of all patches based on the previous guess
+  - $\phi_i = \phi={e,i} + \rho_i\sum_{j=1}^N\phi_jF(j \rightarrow i)$
+- Repeat until converged
+** Rendering
+- The final $\phi_i$'s can be used in place of intensities in a standard renderer
+- Radiosities are constant over the extent of the patch
+- A standard renderer requires vertex intensities
+- If the radiosities of surrounding patches are known, vertex radiosities can be
+  estimated using bilinear interpolation
+*** Vertex Intensity: Bilinear Interpolation
+- Get radiosity value for each polygon vertex
+  - Using bilinear interpolation techniques
+- Make radiosity smooth during rendering
+** Benefit
+- Global illum method: modeling diffuse inter-reflection
+- Color bleeding
+- Soft shadows
+  - an area light source casts a soft shadow from a polygon
+- No ambient term hack
+  - when you want to look at your object in low light, you don't have to adjust
+    parameters of the objects
+  - just the intensities of the lights
+- View independent
+** Limitation
+- Radiation is uniform in all directions
+- Radiosity is piece-wise constant
+  - usual renderings make this assumption, but then interpolate cheaply to fake a
+    nice-looking answer
+  - introduces quantifiable errors
+  - No surface is transparent or translucent
+  - Reflectivity is independent of directions to source and destination
