@@ -1498,3 +1498,41 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
 - Not physically accurate
 - *Other techniques exist to handle these shortcomings, at even greater
   expense!*
+* Environment Mapping
+- An alternative way for modeling global reflections
+- How to create this effect
+- An efficient technique for approximating the appearance of a *reflective
+  surface* by means of a *pre-computed texture image*
+- Cheap attempt at modeling reflections
+- Make surfaces look metallic
+- The poor person's ray tracing method (only consider reflection ray)
+- Use six textures to model faces of a cube
+- Assume cube faces infinitely far away
+- The normal (or reflected eye vector) is used to find which of the textures and
+  what texture coordinate
+  - Texture is transferred in the direction of the reflected ray $r$ from the
+    environment map onto the object
+  - reflected ray: $r=2(n \cdot v)n-v$
+  - What is in the map?
+    - Store colors of every possible direction in pre-computed texture maps
+    - Lookup texture maps based on reflected vector
+** Represent the Map
+*** Cubic Mapping
+- The map resides on the surfaces of a cube around the object
+  - Typically, align the faces of the cube with the coordinate axes
+- To generate the map
+  - For each face of the cube, render the world from the center of the object
+    with the cube face as the image plane
+    - Rendering can be arbitrarily complex (it's off-line)
+- To use the map
+  - Index the R ray into the correct cube face
+  - Compute texture coordinate
+*** Sphere Mapping
+- Map lives on a sphere
+- To generate the map:
+  - Render a spherical panorama from designed center point
+- To use the map
+  - Use the orientation of the R ray to index directly into the sphere
+** Limitations
+- Assume distant environment
+- Only works for convex objects (i.e. no self inter-reflections)
