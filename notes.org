@@ -1658,3 +1658,83 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
   - introduces quantifiable errors
   - No surface is transparent or translucent
   - Reflectivity is independent of directions to source and destination
+* Forward/Inverse Kinematics
+** Definition
+- *kinematics* Study of movement without the consideration of masses or forces
+  that bring about the motion
+** Degrees of Freedom (DOFs)
+- *DOF* The set of independent displacements that specify an object's pose
+  - How many degrees of freedom for a paper airplane?
+    - 6 (3 for position, 3 for orientation)
+    - x, y, z, roll, pitch, yaw
+*** Joints
+- *Elbow* 1 DOF
+- *Wrist* 2 DOF
+- *Shoulder* 3 DOF
+*** Configuration vs Work Space
+**** Configuration space
+- defines the possible object configurations
+- *Degrees of freedom*
+  - Number of params that are necessary and sufficient to define position in
+    configuration
+**** Work space
+- The space in which the object exists
+- *Dimensionality*
+  - R^3 for most things, R^2 for planar arms
+** Animation Basics
+*** Forward Kinematics
+- Compute the configuration (pose) given individual DOF values
+**** basic method
+- An animator can specify the configuration over time
+- Computer will find the position of the end effectors
+*** Inverse Kinematics
+- What if an animator specifies position of end-effectors?
+- Compute individual DOF values that result in specified end effectors'
+  positions
+**** basic method
+- Animator specifies the positions of the end effectors
+- Computer finds the DOF values
+- Challenge: finding a closed form solution is very difficult
+**** Why Inverse Kinematics
+- Motion capture,
+- Basic tools in character animation,
+  - key frame generation
+  - animation control,
+  - interactive manipulation,
+- Computer vision (video-based mocap),
+- Bioinformatics (Protein Inverse Kinematics),
+- Etc.
+**** Method
+- Given end effector's positions, compute required joint angles
+- In simple case, analytic solution exists
+  - Use trig, geometry, and algebra to solve
+***** Challenge
+- Analytical solution only works for a fairly simple structure
+- Numerical/iterative solution needed for complex structure
+***** Numerical Approaches
+- Inverse kinematics can be formulated as an optimization problem
+****** Function Optimization
+- Finding the minimum for nonlinear functions
+  - Find global minimum/maximum
+- How to use optimization to solve a linear system
+  - Create a function in however many variables in the linear system (squaring
+    the original linear functions), and find
+    the global minimum/maximum
+****** Formulation
+- So how to convert the IK process into an optimization function?
+- Find the joint angles $\theta$ that minimize the distance between hypothesized
+  character position and user specified position
+****** Gauss-Newton
+1. initialize joint angles with an initial angle
+2. Update joint angles (using a step size specified by user) until the solution
+   converges
+   1. The value is optimal when the gradient is 0
+******* When to stop?
+1. When the change of solution from prev iteration the current one is below a
+   user specified threshold
+2. dd
+***** Iterative Approaches
+- C/C++ Optimization Library
+  - levmar: nonlinear least squares algorithms in C/C++
+    - works with or without analytical Jacobian matrix
+    - Speeds up the optimization process with analytical Jacobian matrix
