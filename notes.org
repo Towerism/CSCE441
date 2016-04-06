@@ -1762,3 +1762,81 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
 - Most of complex articulated figures requires a numerical solution
 - May not always get the "right" solution
   - Need additional objectives
+* Keyframe Interpolation and Smooth Curve
+** Computer Animation
+- Animation
+  - Making objects move in virtual world
+- Compute animation
+  - The production of consecutive images, which, when displayed, convey a
+    feeling of motion
+*** Topics
+- Rigid body simulation
+  - Bouncing ball
+  - millions of chairs falling down
+- Natural phenomenon
+  - water, fire, smoke, mud, etc.
+- Character animation
+  - Articulated motion, e.g. full-body animation
+  - Deformation, e.g. face
+*** Criterion
+- Physically correct
+  - Rigid body-simulation
+  - Natural phenomenon
+- Natural looking
+  - Character animation
+- Expressive
+  - Cartoon animation
+** Keyframe Interpolation
+- Inverse Kinematics can be used to create key poses
+*** Why Keyframe Animation?
+- Initial motivation was for 2D animation
+- Highly skilled animators draw the key frames
+- Less skilled (lower paid) animators draw the in-between frames
+- Time consuming process
+- Difficult to create physically realistic animation
+- *Today* the in-between frames are automatically computed
+*** 3D animation
+- Animators specify important key frames in 3D
+- Computers generate the in-between frames
+- Some dynamic motion can be done by computers (hair, clothes, etc)
+- Still time consuming (toy story took 4 years)
+*** Keyframing
+- Specify the keyframes
+- Specify the type of interpolation
+  - linear, cubic, parametric
+- Specify the speed profiles
+- Computer computes in-between frames
+**** A keyframe
+- *2D animation* a keyframe is usually a single image
+- *3D animation* each keyframe is defined by a set of parameters
+**** Parameters
+- Position and orientation
+- Body deformation
+- Facial features
+- Light
+- Hair and clothing
+** Curve representation and interpolation
+*** Linear
+- Linearly interpolate the parameters between keyframes
+**** Limitations
+- If motion is highly nonlinear
+- Requires a large number of keyframes
+*** Natural cubic
+- Can use a cubic function to represent a 1D curve
+**** Constraints
+- Need 4 keyframes to determine the four coefficients of the cubic function
+**** 2D Trajectory Interpolation
+- Each point on the trajectory is associated with a time stamp $t$.
+- Perform interpolation for each comp separately
+- Combine result to obtain parametric curve
+**** Issues
+- Position of a single keyframe will change the whole shape of the animation
+- Does not provide local control of the curve
+  - Can manipulate basis matrix to allow local control
+*** Hermite cubic
+- Determined by
+  - Endpoints $P_1$ and $P_2$
+  - tangent vectors $R_1$ $R_4$
+- Use these vectors to control the curve, i.e. construct control vector
+- Given the endpoints and tangent vectors, solve for the basis matrix
+*** Bezier cubic
