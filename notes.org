@@ -1734,7 +1734,31 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
    user specified threshold
 2. dd
 ***** Iterative Approaches
+- More general and can be applied to more complex models 
 - C/C++ Optimization Library
   - levmar: nonlinear least squares algorithms in C/C++
     - works with or without analytical Jacobian matrix
     - Speeds up the optimization process with analytical Jacobian matrix
+**** Concerns
+- Is the solution unique?
+  - Ambiguity of IK
+  - Allows multiple solutions
+  - Possibly infinite solutions
+- Is there always a good solution?
+  - Solution may not even exist
+  - Generally ill-posed problem when the number of DOFs is higher than the
+    number of constraints
+***** Additionally objective
+- Minimal change from a reference pose $\theta_0$
+  - Essentially we make the problem well-defined by looking for the optimal
+    solution where the solution is optimal where the pose is minimally changed
+    - Satisfy the constraints
+    - Then minimize the difference between the solution and the reference pose
+- Naturalness $g(\theta)$ (particularly for human characters)
+  - Use motion-capture together with machine learning techniques to find a good
+    function for this /black-box/ function
+**** Summary
+- Very simply structure allows an analytic solution
+- Most of complex articulated figures requires a numerical solution
+- May not always get the "right" solution
+  - Need additional objectives
