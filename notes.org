@@ -1860,3 +1860,64 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
   - Why cubic?
     - Lowest dimension with control for the second derivative
     - Lowest dimension for non-planar polynomial curves
+* Spline Curve and Multiple Keyframe Interpolation
+** Desirable properties
+*** Continuity
+- C^0: Points coincide, velocities don't
+- C^1: Points and velocities coincide
+- C^2: Points, velocities, and acceleration coincide
+- Cubic curves are continuous and differentiable
+- We only need to worry about the derivatives of two points when they meet
+*** Local control
+- We'd like our spline to have *local control*
+- That is, have each control point affect some well-defined neighborhood around
+  that point
+*** Interpolation
+- Bezier curves are *approximating*
+  - The curve does not (necessarily) pass through all the control points
+  - Each point pulls the curve toward it, but other points are pulling as well
+** Representations
+*** B-Splines
+- We can join multiple Bezier cures to create B-splines
+- Ensure C^2 continuity when two curves meet
+**** Continuity
+- Suppose we want to join two Bezier curves $V$ and $W$ so that C^2 continuity is
+  met at the joint
+  - The end point of $V$ should be the same as start point of $W$ (point)
+  - In addition first and second derivatives should be the same (velocity and
+    acceleration)
+  - This will yield three equations
+  - From these three you can describe the next segment
+**** de Boor points
+- Instead of specifying the Bezier control points, let's specify the corners
+  of the frames that forms a B-Spline
+**** Properties
+- [x] Continuity
+- [X] Local control
+- [ ] Interpolation
+*** Catmull-Rom Splines
+- We can sacrifice C^2 continuity in order to get interpolation and local control
+- Since interpolation and local control are properties, this spline
+  representation is popular
+- Tangent vector for a control point is determined by the difference between the
+  next control point and previous control point
+- $\tau$ which controls how sharply the curve bends around control points is
+  usually chosen to be 0.5
+**** Summary
+- C^1 continuity, not C^2
+- Does not lie within the convex hull of their control points
+**** Properties
+- [ ] Continuity
+- [X] Local control
+- [X] Interpolation
+** Speed control
+- Time warping function to control speed
+  - Mapping from the original time line to the output time line
+  - Positive
+  - *Monotonic* you cannot reverse the time
+*** Methods
+- Simplest from is to have constant velocity along the path
+  - Slope <1 slow down
+  - Slope >1 speed up
+- Assume motion slows down at beginning and speeds up at the end
+** 
