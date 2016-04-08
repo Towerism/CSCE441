@@ -1816,27 +1816,47 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
 - Light
 - Hair and clothing
 ** Curve representation and interpolation
-*** Linear
+*** Functions
+**** Linear
 - Linearly interpolate the parameters between keyframes
-**** Limitations
+***** Limitations
 - If motion is highly nonlinear
 - Requires a large number of keyframes
-*** Natural cubic
+**** Natural cubic
 - Can use a cubic function to represent a 1D curve
-**** Constraints
+***** Constraints
 - Need 4 keyframes to determine the four coefficients of the cubic function
-**** 2D Trajectory Interpolation
+***** 2D Trajectory Interpolation
 - Each point on the trajectory is associated with a time stamp $t$.
 - Perform interpolation for each comp separately
 - Combine result to obtain parametric curve
-**** Issues
+***** Issues
 - Position of a single keyframe will change the whole shape of the animation
 - Does not provide local control of the curve
   - Can manipulate basis matrix to allow local control
-*** Hermite cubic
+**** Hermite cubic
 - Determined by
   - Endpoints $P_1$ and $P_2$
   - tangent vectors $R_1$ $R_4$
 - Use these vectors to control the curve, i.e. construct control vector
 - Given the endpoints and tangent vectors, solve for the basis matrix
-*** Bezier cubic
+**** Bezier cubic
+- Indirectly specify tangent vectors by specifying two intermediate points
+- The interpolation usually does not go through the intermediate points
+***** Basis Matrix
+- Establish the relation between Hermite and Bezier control vectors
+  - Use the starting points together with the tangent vectors
+  - Remember tangent vectors are determined by the starting points and the
+    intermediate points
+- Plugin the relationship to the Hermite equation to obtain Bezier
+  representation
+*** Complex curves
+- Suppose we want to draw a more complex curve
+- Why not use a high-order Bezier?
+  - Wiggly curves
+  - No local control
+- Instead, splice together a curve from individual segments that are cubic
+  Beziers
+  - Why cubic?
+    - Lowest dimension with control for the second derivative
+    - Lowest dimension for non-planar polynomial curves
