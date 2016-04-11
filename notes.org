@@ -1920,4 +1920,79 @@ $I=k_aA+C(k_d(L \cdot N) + k_s (R \cdot E)^n)$
   - Slope <1 slow down
   - Slope >1 speed up
 - Assume motion slows down at beginning and speeds up at the end
-** 
+* Animation with Motion Capture
+- *Motion Capture* a technique of digitally recording movements for
+  - entertainment,
+  - sports, and
+  - medical applications
+** History
+*** Eadweard Muybridge (1830-1904)
+  - First person to photograph movement sequences
+  - Find out whether during a horse's trot, all four hooves were ever off the ground at
+    the same time
+  - The flying horse
+  - Animal locomotion (20k pictures about men, women, children, animals, and birds)
+*** Rotoscope
+- Allow animators to trace cartoon character over photographed frames of live performances
+- Invented by Max Fleischer in 1915
+- 2D manual capture
+- *Koko the clown* first cartoon to be rotoscoped
+- *Snow White and her prince* The human character animation (1937)
+** Technologies
+- "3D Rotoscoping" measuring 3D positions, orientations, velocities, or
+  accelerations automatically
+*** Electromagnetic
+- Each sensor
+  - record 3D position and orientation
+  - placed on joints of moving objects
+- Full-body motion capture needs at least 15 sensors
+- Popular system: [[http://www.ascension-tech.com]]
+**** Pros
+- Measure 3D positions and orientations
+- No occlusion problems
+- Can capture multiple subjects simultaneously
+**** Cons
+- Magnetic perturbations (metal)
+- Small capture volume (cannot capture subjects outside the volume)
+- Cannot capture deformation (facial expression)
+- Hard to capture small bone movement (finger motion)
+- Not as accurate as optical mocap systems
+*** Electromechanical
+- Each sensor measures 3D orientations, including
+  - 3D accelerometers,
+  - 3D gyros, and
+  - 3D magnetometers
+- Each sensor placed on joints of moving object
+- Full body mocap needs at least 15 sensors
+- Popular system: [[http://www.xsens.com]]
+**** Pros
+- Measure 3D orientations
+- No occlusion problems
+- Can capture multiple subjects simultaneously
+- Large capture volume
+- Portable and outdoors capture (e.g. skiing)
+**** Cons
+- Getting 3D position info is not easy
+- The root positions is often measured with ultrasonic position sensors
+- Cannot capture deformation (facial expression)
+- Hard to capture small bone movements (finger motion)
+- Not as accurate as optical mocap systems
+*** Fiber optic
+*** Optical
+- Multiple calibrated cameras (>=8) to digitize different views of performance
+- Wears retro-reflective markers
+- Accurately measures 3D positions of markers
+- Popular system: [[http://vicon.com]]
+**** Pros
+- measures 3D positions and orientations
+- The most accurate capture method
+- Very high framerate
+- Can cap very detailed motion (body, finger, facial, deformation, etc)
+**** Cons
+- Has occlusion problems
+- Hard to capture interactions among multiple actors
+- Limited capture volume
+- Expensive
+*** Video-based
+** Pipeline
+** Data format
